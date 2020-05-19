@@ -38,5 +38,9 @@ export class ItemService {
     };
     return this.httpClient.put(this.endpoint + '/' + item._id, itermForService);
   }
+
+  deleteItem(id:string){
+    return this.httpClient.delete<Item>(this.endpoint + '/' + id);
+    }
 }
 

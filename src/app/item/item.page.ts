@@ -12,6 +12,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ItemPage implements OnInit {
   formItem:FormGroup;
   id: string;
+  hiddenButton: boolean;
 
   constructor(private fb:FormBuilder, private itemService: ItemService, private router:Router, private route: ActivatedRoute) { 
     this.formItem = this.fb.group({
@@ -31,6 +32,11 @@ export class ItemPage implements OnInit {
   }
 
   ngOnInit() {
+    if(this.id){
+      this.hiddenButton = false;
+    }else{
+      this.hiddenButton = true;
+    } 
   }
 
   save(){
@@ -59,4 +65,16 @@ export class ItemPage implements OnInit {
       });
     }
   }
+
+  delete(){
+    this.itemService.deleteItem(this.id).subscribe(res =>{
+    console.log('>>> DELETE', res);  
+    this.router.navigate(['list']);
+
+    },err=>{
+      console.log(err);
+      alert('Ocurrio un error al actualizar el item');
+    });
+}
+
 }
