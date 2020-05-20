@@ -1,20 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Item } from '../models/item.model';
 import { HttpClient, HttpHeaderResponse, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemService {
-  endpoint = 'https://crudcrud.com/api/91546e954bca47b4920ff5a6fb3c5229/items'
+  private isLoading: Subject<boolean> = new Subject<boolean>();
+  endpoint = 'https://supermarket-rest.herokuapp.com/test/eduardo'
   items : Item[] = [];
 
   constructor(private httpClient: HttpClient) { }
 
+  setIsLoading(loading: boolean) { 
+    this.isLoading.next(loading);
+  }
+ 
+  getIsLoading() {
+    return this.isLoading.asObservable();
+  }
+
   saveItem(item:Item){
     let itermForService = {
       title:item.title,
-      quantity: item.quantity.toString()
+      quantity: item.quantity.toString(),
+      image: item.image
     };
     return this.httpClient.post(this.endpoint, itermForService);
     //console.log('>>>>>item', this.items.length);
@@ -33,7 +44,8 @@ export class ItemService {
   updateItem(item:Item){
     let itermForService ={
       title:item.title,
-      quantity: item.quantity.toString()
+      quantity: item.quantity.toString(),
+      image: item.image
 
     };
     return this.httpClient.put(this.endpoint + '/' + item._id, itermForService);
